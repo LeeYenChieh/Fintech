@@ -34,7 +34,7 @@ class CatBoostModel(Model):
             loss_function='Logloss',
             eval_metric='F1',
             auto_class_weights='Balanced',   # 對極端不平衡很有幫助
-            early_stopping_rounds=6000,
+            early_stopping_rounds=15000,
             use_best_model=True,
             random_seed=42,
             verbose=200,
