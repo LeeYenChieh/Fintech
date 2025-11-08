@@ -29,6 +29,28 @@ class RawDataReader(DataReader):
         df_txn = pd.read_csv(os.path.join(self.rawDataDir, 'acct_transaction.csv'))
         df_alert = pd.read_csv(os.path.join(self.rawDataDir, 'acct_alert.csv'))
         df_test = pd.read_csv(os.path.join(self.rawDataDir, 'acct_predict.csv'))
+
+        num_unique_values = df_txn["currency_type"].unique()
+
+        exchange_rate_to_TWD = {
+            'TWD': 1,
+            'USD': 30,      # 1 USD = 30 TWD
+            'JPY': 0.25,    # 1 JPY = 0.25 TWD
+            'AUD': 20,      # 1 AUD = 20 TWD
+            'CNY': 4.2,     # 1 CNY = 4.2 TWD
+            'EUR': 32,      # 1 EUR = 32 TWD
+            'SEK': 3,       # 1 SEK = 3 TWD
+            'GBP': 37,      # 1 GBP = 37 TWD
+            'HKD': 3.8,     # 1 HKD = 3.8 TWD
+            'THB': 0.88,    # 1 THB = 0.88 TWD
+            'CAD': 23,      # 1 CAD = 23 TWD
+            'NZD': 18,      # 1 NZD = 18 TWD
+            'CHF': 33,      # 1 CHF = 33 TWD
+            'SGD': 22,      # 1 SGD = 22 TWD
+            'ZAR': 1.6,     # 1 ZAR = 1.6 TWD
+            'MXN': 1.5      # 1 MXN = 1.5 TWD
+        }
+        df_txn['txn_amt'] = df_txn['txn_amt'] * df_txn['currency_type'].map(exchange_rate_to_TWD)
     
         print("(Finish) Load Dataset.")
         return df_txn, df_alert, df_test

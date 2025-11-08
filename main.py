@@ -7,12 +7,17 @@ from DataReader.PathDataReader import PathDataReader
 from Dataset.Dataset import Dataset
 
 from DataSpliter.DataSpliter import DataSpliter
+from DataSpliter.SimpleDataSpliter import SimpleDataSpliter
+from DataSpliter.SMOKEDataSpliter import SMOKEDataSpliter
 from DataSpliter.CustomDataSpliter import CustomDataSpliter
 
 from ExtractFeature.ExtractFeature import ExtractFeature
+from ExtractFeature.SimpleExtractFeature import SimpleExtractFeature
+from ExtractFeature.RuleBasedExtractFeature import RuleBasedExtractFeature
 from ExtractFeature.CustomExtractFeature import CustomExtractFeature
 
 from Model.Model import Model
+from Model.CatBoostModel import CatBoostModel
 from Model.CustomModel import CustomModel
 
 import os
@@ -28,15 +33,15 @@ def parseArgs():
     parser.add_argument("--dump", action="store_true", help="dump data")
     parser.add_argument("--dumppath", help="store path")
 
-    parser.add_argument("--dataspliter", choices=["custom"], help="choose data splite strategy")
-    parser.add_argument("--feature", choices=["custom"], help="choose extract feature strategy")
+    parser.add_argument("--dataspliter", choices=["simple", "custom", "smoke"], help="choose data splite strategy")
+    parser.add_argument("--feature", choices=["simple", "custom", "rule"], help="choose extract feature strategy")
 
     parser.add_argument("--train", action="store_true", help="train")
     parser.add_argument("--val", action="store_true", help="val")
     parser.add_argument("--test", action="store_true", help="test")
     parser.add_argument("--resultdumppath", help="dump result path")
 
-    parser.add_argument("--model", choices=["custom"], help="choose model")
+    parser.add_argument("--model", choices=["custom", "cat"], help="choose model")
 
     args = parser.parse_args()
     return args
@@ -51,9 +56,17 @@ def main():
 
     if args.dataspliter == "custom":
         dataSpliter = CustomDataSpliter()
+    elif args.dataspliter == "simple":
+        dataSpliter = SimpleDataSpliter()
+    elif args.dataspliter == "smoke":
+        dataSpliter = SMOKEDataSpliter()
     
     if args.feature == "custom":
         extractFeature = CustomExtractFeature()
+    elif args.feature == "simple":
+        extractFeature = SimpleExtractFeature()
+    elif args.feature == "rule":
+        extractFeature = RuleBasedExtractFeature()
 
     if args.readstrategy == "raw":
         datareader = RawDataReader(args.rawpathdir)
@@ -73,6 +86,8 @@ def main():
     model: Model = None
     if args.model == "custom":
         model = CustomModel()
+    elif args.model == "cat":
+        model = CatBoostModel()
     
     if args.train:
         model.train(dataset)

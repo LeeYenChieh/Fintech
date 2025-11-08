@@ -28,6 +28,7 @@ class CSVDataset(Dataset):
     def dump(self, dirPath):
         train = pd.concat([self.trainX, self.trainy.to_frame(name="label")], axis=1)
         val = pd.concat([self.valX, self.valy.to_frame(name="label")], axis=1)
+        print(val[val['label'] == 1].head(40))
 
         train.to_csv(dirPath + '/train.csv', index=False, encoding='utf-8')
         val.to_csv(dirPath + '/validation.csv', index=False, encoding='utf-8')
