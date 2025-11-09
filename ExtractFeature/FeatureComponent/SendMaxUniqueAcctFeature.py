@@ -18,6 +18,6 @@ class SendMaxUniqueAcctFeature(FeatureDecorator):
         df_feature = df_feature.rename('send_max_unique')
         result.append(df_feature)
 
-        print("(Finish) Extract Send Unique Account in 24hr Feature")
+        print("(Finish) Extract Send Max Unique Account in 24hr Feature")
 
         return result

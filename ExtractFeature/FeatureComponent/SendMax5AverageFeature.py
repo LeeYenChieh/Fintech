@@ -13,7 +13,7 @@ class SendMax5AverageFeature(FeatureDecorator):
         mask = (df_txm_event['event_date'].isna()) | (df_txm_event['txn_date'] <= df_txm_event['event_date'])
         df_valid = df_txm_event[mask]
 
-        df_feature = df_valid.groupby('acct')['txn_amt'].nlargest(5).reset_index().groupby('acct').mean().rename('send_max5_avg')
+        df_feature = df_valid.groupby('acct')['txn_amt'].nlargest(5).rename('temp').reset_index().groupby('acct')['temp'].mean().rename('send_max5_avg')
         result.append(df_feature)
 
         print("(Finish) Extract Send Max 5 Average Amount Feature")
