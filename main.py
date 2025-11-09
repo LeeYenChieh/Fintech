@@ -39,6 +39,7 @@ def parseArgs():
     parser.add_argument("--train", action="store_true", help="train")
     parser.add_argument("--val", action="store_true", help="val")
     parser.add_argument("--test", action="store_true", help="test")
+    parser.add_argument("--testpath", help="test path")
     parser.add_argument("--resultdumppath", help="dump result path")
 
     parser.add_argument("--model", choices=["custom", "cat"], help="choose model")
@@ -97,7 +98,7 @@ def main():
         model.validate(dataset)
     
     if args.test:
-        model.test(dataset, args.resultdumppath)
+        model.test(dataset, args.testpath, args.resultdumppath)
 
 if __name__ == '__main__':
     main()

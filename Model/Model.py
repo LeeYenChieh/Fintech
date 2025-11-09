@@ -13,5 +13,5 @@ class Model:
     def validate(self, dataset: Dataset):
         raise NotImplementedError
 
-    def test(self, dataset: Dataset, dumpPath):
+    def test(self, dataset: Dataset, testPath, dumpPath):
         raise NotImplementedError

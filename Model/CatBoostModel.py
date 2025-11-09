@@ -75,7 +75,7 @@ class CatBoostModel(Model):
         print(f"Validation F1-score: {f1:.4f}")
         return f1
 
-    def test(self, dataset: Dataset, dumpPath):
+    def test(self, dataset: Dataset, testPath, dumpPath):
         if self.model == None:
             self.load()
         testX = dataset.getTestX()
@@ -89,7 +89,11 @@ class CatBoostModel(Model):
         preds = self.model.predict(testX_without_acct)
         preds = pd.Series(preds).rename("label")
         preds = pd.concat([all_acct, preds], axis=1)
-        result = pd.merge(dataset.getTestX(), preds, how="left", on="acct").fillna(0)
+
+        originTest = pd.read_csv(testPath)
+        originTest.drop('label', axis=1, inplace=True)
+        
+        result = pd.merge(originTest, preds, how="left", on="acct").fillna(0)
         result = result[['acct', 'label']]
         result.to_csv(dumpPath, index=False)
         print(f"(Finish) Test prediction saved to {dumpPath}")
