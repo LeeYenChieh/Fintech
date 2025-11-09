@@ -41,6 +41,7 @@ def parseArgs():
     parser.add_argument("--test", action="store_true", help="test")
     parser.add_argument("--testpath", help="test path")
     parser.add_argument("--resultdumppath", help="dump result path")
+    parser.add_argument("--threshold", type=float, help="dump result path")
 
     parser.add_argument("--model", choices=["custom", "cat"], help="choose model")
     parser.add_argument("--modelpath", help="store model path")
@@ -95,10 +96,10 @@ def main():
         model.train(dataset)
     
     if args.val:
-        model.validate(dataset)
+        model.validate(dataset, args.threshold)
     
     if args.test:
-        model.test(dataset, args.testpath, args.resultdumppath)
+        model.test(dataset, args.threshold, args.testpath, args.resultdumppath)
 
 if __name__ == '__main__':
     main()

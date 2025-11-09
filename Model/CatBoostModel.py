@@ -59,7 +59,7 @@ class CatBoostModel(Model):
         self.model = CatBoostClassifier()
         self.model.load_model(self.modelPath)
 
-    def validate(self, dataset: Dataset):
+    def validate(self, dataset: Dataset, threshold):
         if self.model == None:
             self.load()
         valX = dataset.getValX()
@@ -70,12 +70,13 @@ class CatBoostModel(Model):
         if 'acct' in valX.columns.tolist():
             valX_without_acct = valX.drop('acct', axis = 1)
         
-        val_pred = self.model.predict(valX_without_acct)
+        val_pred = pd.Series((self.model.predict_proba(valX_without_acct)[:,1] > threshold).astype(int))
+        
         f1 = f1_score(valy, val_pred)
         print(f"Validation F1-score: {f1:.4f}")
         return f1
 
-    def test(self, dataset: Dataset, testPath, dumpPath):
+    def test(self, dataset: Dataset, threshold, testPath, dumpPath):
         if self.model == None:
             self.load()
         testX = dataset.getTestX()
@@ -86,7 +87,7 @@ class CatBoostModel(Model):
         if 'acct' in testX.columns.tolist():
             testX_without_acct = testX.drop('acct', axis = 1)
 
-        preds = self.model.predict(testX_without_acct)
+        preds = (self.model.predict_proba(testX_without_acct)[:,1] > threshold).astype(int)
         preds = pd.Series(preds).rename("label")
         preds = pd.concat([all_acct, preds], axis=1)
 

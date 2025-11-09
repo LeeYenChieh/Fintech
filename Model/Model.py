@@ -10,8 +10,8 @@ class Model:
     def train(self, dataset: Dataset):
         raise NotImplementedError
 
-    def validate(self, dataset: Dataset):
+    def validate(self, dataset: Dataset, threshold):
         raise NotImplementedError
 
-    def test(self, dataset: Dataset, testPath, dumpPath):
+    def test(self, dataset: Dataset, threshold, testPath, dumpPath):
         raise NotImplementedError

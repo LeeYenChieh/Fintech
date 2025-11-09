@@ -11,8 +11,8 @@ class CustomModel(Model):
     def load(self):
         pass
 
-    def validate(self, dataset: Dataset):
+    def validate(self, dataset: Dataset, threshold):
         print("validation")
 
-    def test(self, dataset: Dataset, testPath, dumpPath):
+    def test(self, dataset: Dataset, threshold, testPath, dumpPath):
         print("test")
