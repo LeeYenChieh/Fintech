@@ -17,7 +17,7 @@ class SendChannelTimesFeature(FeatureDecorator):
         df_valid['channel_type'] = df_valid['channel_type'].astype(str)
         df_channel_txn = df_valid[df_valid['channel_type'] == self.channel]
         df_feature = df_channel_txn.groupby('acct').size()
-        df_feature = df_feature.rename('send_channel_times')
+        df_feature = df_feature.rename(f'send_channel_{self.channel}_times')
         result.append(df_feature)
 
         print(f'(Finish) Extract Send Channel {self.channel} Times Feature')
