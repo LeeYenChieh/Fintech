@@ -54,7 +54,7 @@ class CatBoostModel(Model):
 
     def load(self):
         self.model = CatBoostClassifier()
-        self.model.load(self.modelPath)
+        self.model.load_model(self.modelPath)
 
     def validate(self, dataset: Dataset):
         if self.model == None:
