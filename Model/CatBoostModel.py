@@ -15,18 +15,21 @@ class CatBoostModel(Model):
         trainy = dataset.getTrainy()
         valy = dataset.getValy()
 
+        trainX_without_acct = trainX
+        valX_without_acct = valX
+
         # 偵測類別特徵 (CatBoost 可以直接吃 DataFrame)
         cat_features = []
         print(trainX.columns.tolist())
         if 'acct' in trainX.columns.tolist():
-            trainX.drop('acct', axis = 1, inplace=True)
-            valX.drop('acct', axis = 1, inplace=True)
+            trainX_without_acct = trainX.drop('acct', axis = 1)
+            valX_without_acct = valX.drop('acct', axis = 1)
 
         print(f"Detected categorical features: {cat_features}")
 
         # 建立訓練與驗證資料池
-        train_pool = Pool(trainX, label=trainy, cat_features=cat_features)
-        val_pool = Pool(valX, label=valy, cat_features=cat_features)
+        train_pool = Pool(trainX_without_acct, label=trainy, cat_features=cat_features)
+        val_pool = Pool(valX_without_acct, label=valy, cat_features=cat_features)
 
         # 設定 CatBoost 參數
         self.model = CatBoostClassifier(
@@ -61,7 +64,13 @@ class CatBoostModel(Model):
             self.load()
         valX = dataset.getValX()
         valy = dataset.getValy()
-        val_pred = self.model.predict(valX)
+
+        valX_without_acct = valX
+
+        if 'acct' in valX.columns.tolist():
+            valX_without_acct = valX.drop('acct', axis = 1)
+        
+        val_pred = self.model.predict(valX_without_acct)
         f1 = f1_score(valy, val_pred)
         print(f"Validation F1-score: {f1:.4f}")
         return f1
@@ -70,10 +79,15 @@ class CatBoostModel(Model):
         if self.model == None:
             self.load()
         testX = dataset.getTestX()
+
+        testX_without_acct = testX
         all_acct = testX["acct"]
-        testX.drop('acct', axis=1, inplace=True)
-        preds = self.model.predict(testX)
+
+        if 'acct' in testX.columns.tolist():
+            testX_without_acct = testX.drop('acct', axis = 1)
+
+        preds = self.model.predict(testX_without_acct)
         preds = preds.rename("label")
         result = pd.concat([all_acct, preds], axis=1)
-        preds.to_csv(dumpPath, index=False)
+        result.to_csv(dumpPath, index=False)
         print(f"(Finish) Test prediction saved to {dumpPath}")
