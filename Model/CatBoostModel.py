@@ -15,8 +15,8 @@ class CatBoostModel(Model):
 
         # 偵測類別特徵 (CatBoost 可以直接吃 DataFrame)
         cat_features = []
-        trainX = trainX.drop('acct')
-        valX = valX.drop('acct')
+        trainX = trainX.drop('acct', axis = 1)
+        valX = valX.drop('acct', axis = 1)
 
         print(f"Detected categorical features: {cat_features}")
 
