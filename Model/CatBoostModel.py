@@ -57,6 +57,8 @@ class CatBoostModel(Model):
         self.model.load(self.modelPath)
 
     def validate(self, dataset: Dataset):
+        if self.model == None:
+            self.load()
         valX = dataset.getValX()
         valy = dataset.getValy()
         val_pred = self.model.predict(valX)
@@ -65,6 +67,8 @@ class CatBoostModel(Model):
         return f1
 
     def test(self, dataset: Dataset, dumpPath):
+        if self.model == None:
+            self.load()
         testX = dataset.getTestX()
         all_acct = testX["acct"]
         testX.drop('acct', axis = 1)
