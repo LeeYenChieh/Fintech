@@ -59,7 +59,7 @@ class CatBoostModel(Model):
         self.model = CatBoostClassifier()
         self.model.load_model(self.modelPath)
 
-    def validate(self, dataset: Dataset, threshold):
+    def validate(self, dataset: Dataset, threshold=0.5):
         if self.model == None:
             self.load()
         valX = dataset.getValX()
@@ -76,7 +76,7 @@ class CatBoostModel(Model):
         print(f"Validation F1-score: {f1:.4f}")
         return f1
 
-    def test(self, dataset: Dataset, threshold, testPath, dumpPath):
+    def test(self, dataset: Dataset, threshold=0.5, testPath="", dumpPath=""):
         if self.model == None:
             self.load()
         testX = dataset.getTestX()
