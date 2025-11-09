@@ -10,7 +10,7 @@ class SMOKEDataSpliter(DataSpliter):
         smote = SMOTE(random_state=42, sampling_strategy='auto', k_neighbors=5)
         X_no_acct = X.drop(columns=['acct'])
         X_resampled, y_resampled = smote.fit_resample(X_no_acct, y)
-        X_resampled["acct"] = None
+        X_resampled["acct"] = "None"
 
         X_train_final, X_val, y_train_final, y_val = train_test_split(
             X_resampled, y_resampled, 
