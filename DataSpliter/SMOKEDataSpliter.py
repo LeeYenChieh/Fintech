@@ -11,7 +11,7 @@ class SMOKEDataSpliter(DataSpliter):
         X_train, X_val, y_train, y_val = train_test_split(
             X, y, 
             test_size=0.2,      # 驗證集比例 20%
-            stratify=y_resampled,   # 根據 y 保持正負樣本比例
+            stratify=y_train,   # 根據 y 保持正負樣本比例
             random_state=42
         )
 
