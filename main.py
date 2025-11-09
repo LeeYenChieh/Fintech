@@ -42,6 +42,7 @@ def parseArgs():
     parser.add_argument("--resultdumppath", help="dump result path")
 
     parser.add_argument("--model", choices=["custom", "cat"], help="choose model")
+    parser.add_argument("--modelpath", help="store model path")
 
     args = parser.parse_args()
     return args
@@ -87,7 +88,7 @@ def main():
     if args.model == "custom":
         model = CustomModel()
     elif args.model == "cat":
-        model = CatBoostModel()
+        model = CatBoostModel(args.modelpath)
     
     if args.train:
         model.train(dataset)

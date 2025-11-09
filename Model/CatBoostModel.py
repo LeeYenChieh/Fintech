@@ -2,9 +2,11 @@ from Dataset.Dataset import Dataset
 from Model.Model import Model
 from catboost import CatBoostClassifier, Pool
 from sklearn.metrics import f1_score
+import pandas as pd
 
 class CatBoostModel(Model):
-    def __init__(self):
+    def __init__(self, modelPath):
+        super().__init__(modelPath)
         self.model = None
 
     def train(self, dataset: Dataset):
@@ -45,12 +47,14 @@ class CatBoostModel(Model):
 
         # 開始訓練
         self.model.fit(train_pool, eval_set=val_pool, use_best_model=True)
-        self.model.save_model("catboost_model.cbm")
+        self.model.save_model(self.modelPath)
 
         # 驗證集 F1 分數
-        val_pred = self.model.predict(valX)
-        f1 = f1_score(valy, val_pred)
-        print(f"Validation F1-score: {f1:.4f}")
+        self.validate(dataset)
+
+    def load(self):
+        self.model = CatBoostClassifier()
+        self.model.load(self.modelPath)
 
     def validate(self, dataset: Dataset):
         valX = dataset.getValX()
@@ -62,8 +66,10 @@ class CatBoostModel(Model):
 
     def test(self, dataset: Dataset, dumpPath):
         testX = dataset.getTestX()
-        preds = self.model.predict_proba(testX)[:, 1]  # 取出預測機率
-        test_result = testX.copy()
-        test_result["pred_prob"] = preds
-        test_result.to_csv(dumpPath + "/test_pred.csv", index=False)
-        print(f"(Finish) Test prediction saved to {dumpPath}/test_pred.csv")
+        all_acct = testX["acct"]
+        testX.drop('acct', axis = 1)
+        preds = self.model.predict(testX)
+        preds = preds.rename("label")
+        result = pd.concat([all_acct, preds], axis=1)
+        preds.to_csv(dumpPath, index=False)
+        print(f"(Finish) Test prediction saved to {dumpPath}")

@@ -7,6 +7,9 @@ class CustomModel(Model):
 
     def train(self, dataset: Dataset):
         print("train")
+    
+    def load(self):
+        pass
 
     def validate(self, dataset: Dataset):
         print("validation")
