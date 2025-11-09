@@ -18,7 +18,7 @@ class CatBoostModel(Model):
         print(trainX.columns.tolist())
         if 'acct' in trainX.columns.tolist():
             trainX.drop('acct', axis = 1, inplace=True)
-            valX = valX.drop('acct', axis = 1, inplace=True)
+            valX.drop('acct', axis = 1, inplace=True)
 
         print(f"Detected categorical features: {cat_features}")
 
