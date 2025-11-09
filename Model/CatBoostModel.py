@@ -27,14 +27,14 @@ class CatBoostModel(Model):
 
         # 設定 CatBoost 參數
         self.model = CatBoostClassifier(
-            iterations=60000,
+            iterations=20000,
             learning_rate=0.02,
             depth=10,
             l2_leaf_reg=5,
             loss_function='Logloss',
             eval_metric='F1',
             auto_class_weights='Balanced',   # 對極端不平衡很有幫助
-            early_stopping_rounds=15000,
+            # early_stopping_rounds=15000,
             use_best_model=True,
             random_seed=42,
             verbose=200,
