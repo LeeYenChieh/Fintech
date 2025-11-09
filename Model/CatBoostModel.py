@@ -88,6 +88,8 @@ class CatBoostModel(Model):
 
         preds = self.model.predict(testX_without_acct)
         preds = pd.Series(preds).rename("label")
-        result = pd.concat([all_acct, preds], axis=1)
+        preds = pd.concat([all_acct, preds], axis=1)
+        result = pd.merge(dataset.getTestX(), preds, how="left", on="acct").fillna(0)
+        result = result[['acct', 'label']]
         result.to_csv(dumpPath, index=False)
         print(f"(Finish) Test prediction saved to {dumpPath}")
