@@ -71,7 +71,7 @@ class CatBoostModel(Model):
             self.load()
         testX = dataset.getTestX()
         all_acct = testX["acct"]
-        testX.drop('acct', axis = 1)
+        testX.drop('acct', axis=1, inplace=True)
         preds = self.model.predict(testX)
         preds = preds.rename("label")
         result = pd.concat([all_acct, preds], axis=1)
