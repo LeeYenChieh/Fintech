@@ -37,7 +37,7 @@ class CatBoostModel(Model):
             # early_stopping_rounds=15000,
             use_best_model=True,
             random_seed=42,
-            verbose=200,
+            verbose=2000,
             thread_count=-1,
             task_type="GPU"
         )

@@ -15,14 +15,14 @@ def count_max_within_2days(group):
             count = 1
     return max_count
 
-class MaxSendTimesFeature(FeatureDecorator):
+class RecvMaxTimesFeature(FeatureDecorator):
     def __init__(self, df_txn, df_alert, df_test, component):
         super().__init__(df_txn, df_alert, df_test, component)
     
     def getFeature(self):
         result = super().getFeature()
 
-        df_rename = self.df_txn.rename(columns={'from_acct': 'acct'})
+        df_rename = self.df_txn.rename(columns={'to_acct': 'acct'})
         df_txm_event = df_rename.merge(self.df_alert, on="acct", how="left")
         mask = (df_txm_event['event_date'].isna()) | (df_txm_event['txn_date'] <= df_txm_event['event_date'])
         df_valid = df_txm_event[mask]
@@ -30,9 +30,9 @@ class MaxSendTimesFeature(FeatureDecorator):
         df_valid = df_valid.sort_values(['acct', 'txn_date'])
         df_valid['diff_days'] = df_valid.groupby('acct')['txn_date'].diff()
         df_max = df_valid.groupby('acct').apply(count_max_within_2days)
-        df_max = df_max.rename('max_send_times')
+        df_max = df_max.rename('recv_max_times')
 
         result.append(df_max)
-        print("(Finish) Extract Max Send Times in 48hr Feature")
+        print("(Finish) Extract Recv Max Times in 48hr Feature")
 
         return result
