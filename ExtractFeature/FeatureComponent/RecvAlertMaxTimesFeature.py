@@ -1,7 +1,7 @@
 from ExtractFeature.FeatureComponent.FeatureDecorator import FeatureDecorator
 import pandas as pd
 
-class RecvMaxUniqueAcctFeature(FeatureDecorator):
+class RecvAlertMaxTimesFeature(FeatureDecorator):
     def __init__(self, df_txn, df_alert, df_test, component):
         super().__init__(df_txn, df_alert, df_test, component)
     
@@ -12,12 +12,12 @@ class RecvMaxUniqueAcctFeature(FeatureDecorator):
         df_txm_event = df_rename.merge(self.df_alert, on="acct", how="left")
         mask = (df_txm_event['event_date'].isna()) | (df_txm_event['txn_date'] <= df_txm_event['event_date'])
         df_valid = df_txm_event[mask]
-        
-        df_one_day_nums = df_valid.groupby(['acct', 'txn_date'])['from_acct'].nunique().rename('temp').reset_index()
-        df_feature = df_one_day_nums.groupby('acct')['temp'].max()
-        df_feature = df_feature.rename("recv_max_unique")
+
+        df_from_is_alert = df_valid[df_valid['from_acct'].isin(self.df_alert['acct'])]
+        df_feature = df_from_is_alert.groupby(['acct', 'txn_date']).size().rename("temp").reset_index()
+        df_feature = df_feature.groupby('acct')["temp"].max().rename("recv_alert_max")
         result.append(df_feature)
 
-        print("(Finish) Extract Recv Max Unique Account in 24hr Feature")
+        print("(Finish) Extract Recv Alert Max Times in 24 hours Account Feature")
 
         return result

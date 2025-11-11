@@ -13,8 +13,8 @@ class SendMaxUniqueAcctFeature(FeatureDecorator):
         mask = (df_txm_event['event_date'].isna()) | (df_txm_event['txn_date'] <= df_txm_event['event_date'])
         df_valid = df_txm_event[mask]
         
-        df_one_day_nums = df_valid.groupby(['acct', 'txn_date'])['to_acct'].nunique().reset_index()
-        df_feature = df_one_day_nums.groupby('acct')['to_acct'].max()
+        df_one_day_nums = df_valid.groupby(['acct', 'txn_date'])['to_acct'].nunique().rename('temp').reset_index()
+        df_feature = df_one_day_nums.groupby('acct')['temp'].max()
         df_feature = df_feature.rename('send_max_unique')
         result.append(df_feature)
 

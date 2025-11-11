@@ -5,17 +5,27 @@ from ExtractFeature.FeatureComponent.RecvMaxFeature import RecvMaxFeature
 from ExtractFeature.FeatureComponent.RecvAverageFeature import RecvAverageFeature
 from ExtractFeature.FeatureComponent.SendMaxFeature import SendMaxFeature
 from ExtractFeature.FeatureComponent.SendAverageFeature import SendAverageFeature
-from ExtractFeature.FeatureComponent.RecvMaxTimesFeature import RecvMaxTimesFeature
+from ExtractFeature.FeatureComponent.Recv1MaxTimesFeature import Recv1MaxTimesFeature
+from ExtractFeature.FeatureComponent.Recv3MaxTimesFeature import Recv3MaxTimesFeature
+from ExtractFeature.FeatureComponent.Recv7MaxTimesFeature import Recv7MaxTimesFeature
+from ExtractFeature.FeatureComponent.Recv14MaxTimesFeature import Recv14MaxTimesFeature
+from ExtractFeature.FeatureComponent.Recv30MaxTimesFeature import Recv30MaxTimesFeature
 from ExtractFeature.FeatureComponent.RecvTimesFeature import RecvTimesFeature
-from ExtractFeature.FeatureComponent.SendMaxTimesFeature import SendMaxTimesFeature
+from ExtractFeature.FeatureComponent.Send1MaxTimesFeature import Send1MaxTimesFeature
+from ExtractFeature.FeatureComponent.Send3MaxTimesFeature import Send3MaxTimesFeature
+from ExtractFeature.FeatureComponent.Send7MaxTimesFeature import Send7MaxTimesFeature
+from ExtractFeature.FeatureComponent.Send14MaxTimesFeature import Send14MaxTimesFeature
+from ExtractFeature.FeatureComponent.Send30MaxTimesFeature import Send30MaxTimesFeature
 from ExtractFeature.FeatureComponent.SendTimesFeature import SendTimesFeature
 from ExtractFeature.FeatureComponent.ForeignTxnTimesFeature import ForeignTxnTimesFeature
 from ExtractFeature.FeatureComponent.RecvNightTxnTimesFeature import RecvNightTxnTimesFeature
 from ExtractFeature.FeatureComponent.SendNightTxnTimesFeature import SendNightTxnTimesFeature
 from ExtractFeature.FeatureComponent.IsSelfFeature import IsSelfFeature
 from ExtractFeature.FeatureComponent.RecvAlertTimesFeature import RecvAlertTimesFeature
+from ExtractFeature.FeatureComponent.RecvAlertMaxTimesFeature import RecvAlertMaxTimesFeature
 from ExtractFeature.FeatureComponent.RecvAlertSumFeature import RecvAlertSumFeature
 from ExtractFeature.FeatureComponent.SendAlertTimesFeature import SendAlertTimesFeature
+from ExtractFeature.FeatureComponent.SendAlertMaxTimesFeature import SendAlertMaxTimesFeature
 from ExtractFeature.FeatureComponent.SendAlertSumFeature import SendAlertSumFeature
 from ExtractFeature.FeatureComponent.RecvUniqueAcctFeature import RecvUniqueAcctFeature
 from ExtractFeature.FeatureComponent.RecvMaxUniqueAcctFeature import RecvMaxUniqueAcctFeature
@@ -42,10 +52,18 @@ class RuleBasedExtractFeature(ExtractFeature):
         feature = SendMaxFeature(df_txn, df_alert, df_test, feature)
         feature = SendAverageFeature(df_txn, df_alert, df_test, feature)
 
-        feature = RecvMaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Recv1MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Recv3MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Recv7MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Recv14MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Recv30MaxTimesFeature(df_txn, df_alert, df_test, feature)
         feature = RecvTimesFeature(df_txn, df_alert, df_test, feature)
         
-        feature = SendMaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Send1MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Send3MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Send7MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Send14MaxTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = Send30MaxTimesFeature(df_txn, df_alert, df_test, feature)
         feature = SendTimesFeature(df_txn, df_alert, df_test, feature)
 
         feature = ForeignTxnTimesFeature(df_txn, df_alert, df_test, feature)
@@ -56,8 +74,10 @@ class RuleBasedExtractFeature(ExtractFeature):
         feature = IsSelfFeature(df_txn, df_alert, df_test, feature)
 
         feature = RecvAlertTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = RecvAlertMaxTimesFeature(df_txn, df_alert, df_test, feature)
         feature = RecvAlertSumFeature(df_txn, df_alert, df_test, feature)
         feature = SendAlertTimesFeature(df_txn, df_alert, df_test, feature)
+        feature = SendAlertMaxTimesFeature(df_txn, df_alert, df_test, feature)
         feature = SendAlertSumFeature(df_txn, df_alert, df_test, feature)
 
         feature = RecvMaxUniqueAcctFeature(df_txn, df_alert, df_test, feature)
