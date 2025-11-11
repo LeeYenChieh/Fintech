@@ -24,15 +24,21 @@ class LightGBM(Model):
         self.modelPath = modelPath
 
     def train(self, dataset: Dataset):
-        print("[LightGBM] Start training...")
         trainX = dataset.getTrainX()
         valX = dataset.getValX()
         trainy = dataset.getTrainy()
         valy = dataset.getValy()
 
+        trainX_without_acct = trainX
+        valX_without_acct = valX
+
+        if 'acct' in trainX.columns.tolist():
+            trainX_without_acct = trainX.drop('acct', axis = 1)
+            valX_without_acct = valX.drop('acct', axis = 1)
+
         # 建立 LightGBM Dataset
-        lgb_train = lgb.Dataset(trainX, label=trainy)
-        lgb_val = lgb.Dataset(valX, label=valy, reference=lgb_train)
+        lgb_train = lgb.Dataset(trainX_without_acct, label=trainy)
+        lgb_val = lgb.Dataset(valX_without_acct, label=valy, reference=lgb_train)
 
         # LightGBM 參數
         params = {
@@ -68,7 +74,6 @@ class LightGBM(Model):
         'gpu_use_dp': False,           # 使用單精度浮點（速度更快）
         }
 
-
         # 訓練
         self.model = lgb.train(
             params,
@@ -82,21 +87,24 @@ class LightGBM(Model):
 
         # 儲存模型
         self.model.save_model(self.modelPath)
-        print(f"[LightGBM] Model saved to {self.modelPath}")
+        self.validate()
 
     def load(self):
         print(f"[LightGBM] Loading model from {self.modelPath} ...")
-        if not os.path.exists(self.modelPath):
-            raise FileNotFoundError(f"Model file not found: {self.modelPath}")
         self.model = lgb.Booster(model_file=self.modelPath)
-        print("[LightGBM] Model loaded successfully.")
 
     def validate(self, dataset: Dataset, threshold=0.5):
-        print("[LightGBM] Start validation...")
+        if self.model == None:
+            self.load()
         valX = dataset.getValX()
         valy = dataset.getValy()
+        
+        valX_without_acct = valX
 
-        preds = self.model.predict(valX, num_iteration=self.model.best_iteration)
+        if 'acct' in valX.columns.tolist():
+            valX_without_acct = valX.drop('acct', axis = 1)
+
+        preds = self.model.predict(valX_without_acct, num_iteration=self.model.best_iteration)
         pred_labels = (preds > threshold).astype(int)
 
         f1 = f1_score(valy, pred_labels)
@@ -104,21 +112,26 @@ class LightGBM(Model):
         return f1
 
     def test(self, dataset: Dataset, threshold=0.5, testPath=None, dumpPath=None):
-        print("[LightGBM] Start testing...")
+        if self.model == None:
+            self.load()
         testX = dataset.getTestX()
-        preds = self.model.predict(testX, num_iteration=self.model.best_iteration)
+        testX_without_acct = testX
+        all_acct = testX["acct"]
+
+        if 'acct' in testX.columns.tolist():
+            testX_without_acct = testX.drop('acct', axis = 1)
+
+        preds = self.model.predict(testX_without_acct, num_iteration=self.model.best_iteration)
         pred_labels = (preds > threshold).astype(int)
 
-        # 儲存預測結果
-        if testPath is not None and dumpPath is not None:
-            os.makedirs(dumpPath, exist_ok=True)
-            output_path = os.path.join(dumpPath, "test_predictions.csv")
-            result_df = pd.DataFrame({
-                "id": range(len(testX)),
-                "prediction": pred_labels
-            })
-            result_df.to_csv(output_path, index=False)
-            print(f"[LightGBM] Test results saved to {output_path}")
+        pred_labels = pd.Series(pred_labels).rename("label")
+        pred_labels = pd.concat([all_acct, pred_labels], axis=1)
 
-        print(f"[LightGBM] Test Finished. Total {len(pred_labels)} samples.")
+        originTest = pd.read_csv(testPath)
+        originTest.drop('label', axis=1, inplace=True)
+        
+        result = pd.merge(originTest, pred_labels, how="left", on="acct").fillna(0)
+        result = result[['acct', 'label']]
+        result.to_csv(dumpPath, index=False)
+        print(f"(Finish) Test prediction saved to {dumpPath}")
         return pred_labels
