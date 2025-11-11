@@ -18,6 +18,7 @@ from ExtractFeature.CustomExtractFeature import CustomExtractFeature
 
 from Model.Model import Model
 from Model.CatBoostModel import CatBoostModel
+from Model.LightGBMModel import LightGBM
 from Model.CustomModel import CustomModel
 
 import os
@@ -43,7 +44,7 @@ def parseArgs():
     parser.add_argument("--resultdumppath", help="dump result path")
     parser.add_argument("--threshold", type=float, help="dump result path")
 
-    parser.add_argument("--model", choices=["custom", "cat"], help="choose model")
+    parser.add_argument("--model", choices=["custom", "cat", "lightgbm"], help="choose model")
     parser.add_argument("--modelpath", help="store model path")
 
     args = parser.parse_args()
@@ -91,6 +92,8 @@ def main():
         model = CustomModel()
     elif args.model == "cat":
         model = CatBoostModel(args.modelpath)
+    elif args.model == "lightgbm":
+        model = LightGBM(args.modelpath)
     
     if args.train:
         model.train(dataset)
