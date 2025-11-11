@@ -70,9 +70,6 @@ class LightGBM(Model):
             'lambda_l2': 1.0,              # L2 正則化
             'min_gain_to_split': 0.0,      # 分裂所需的最小增益
             'extra_trees': False,          # 關閉 Extremely Randomized Trees 模式
-
-            # === 精度與並行設定 ===
-            'gpu_use_dp': False,           # 使用單精度浮點（速度更快）
         }
 
         # 訓練
