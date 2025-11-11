@@ -54,7 +54,7 @@ class LightGBM(Model):
 
             # === 學習率與樹深度設定 ===
             'learning_rate': 0.05,         # 小 learning_rate，搭配大量樹數
-            'num_leaves': 64,             # 葉節點數增加，學習更細
+            'num_leaves': 128,             # 葉節點數增加，學習更細
             'max_depth': -1,               # 不限制深度，由 num_leaves 控制
             'min_data_in_leaf': 20,        # 避免過度擬合（可調小更強）
 
