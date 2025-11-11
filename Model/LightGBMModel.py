@@ -72,7 +72,6 @@ class LightGBM(Model):
             'extra_trees': False,          # 關閉 Extremely Randomized Trees 模式
 
             # === 精度與並行設定 ===
-            'n_jobs': -1,                  # CPU 輔助運算核心數
             'gpu_use_dp': False,           # 使用單精度浮點（速度更快）
         }
 
