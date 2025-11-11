@@ -54,15 +54,16 @@ class LightGBM(Model):
 
             # === 學習率與樹深度設定 ===
             'learning_rate': 0.05,         # 小 learning_rate，搭配大量樹數
-            'num_leaves': 256,             # 葉節點數增加，學習更細
+            'num_leaves': 128,             # 葉節點數增加，學習更細
             'max_depth': -1,               # 不限制深度，由 num_leaves 控制
             'min_data_in_leaf': 20,        # 避免過度擬合（可調小更強）
 
             # === 抽樣與特徵控制 ===
-            'feature_fraction': 0.9,       # 每次訓練使用的特徵比例
+            'feature_fraction': 0.8,       # 每次訓練使用的特徵比例
             'bagging_fraction': 0.8,       # 每次訓練使用的樣本比例
             'bagging_freq': 1,             # 每棵樹都重新抽樣
             'max_bin': 255,                # 特徵分箱數，GPU 推薦使用 255
+            'gpu_use_dp': True,
 
             # === 正則化設定 ===
             'lambda_l1': 1.0,              # L1 正則化
