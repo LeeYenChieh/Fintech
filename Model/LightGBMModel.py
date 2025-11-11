@@ -48,7 +48,7 @@ class LightGBM(Model):
             'boosting_type': 'gbdt',
             'device': 'gpu',               # 啟用 GPU 訓練
             'num_gpu': 20,
-            'verbosity': 1,
+            'verbosity': 2,
             'seed': 42,
 
             # === 學習率與樹深度設定 ===
