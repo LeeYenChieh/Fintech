@@ -47,7 +47,7 @@ class LightGBM(Model):
             'metric': ['binary_logloss', 'auc'],  # 同時計算 AUC
             'boosting_type': 'gbdt',
             'device': 'gpu',               # 啟用 GPU 訓練
-            'num_gpu': 20,
+            'gpu_device_id': -1,
             'verbosity': 2,
             'seed': 42,
 
