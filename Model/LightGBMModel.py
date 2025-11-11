@@ -48,6 +48,7 @@ class LightGBM(Model):
             'boosting_type': 'gbdt',
             'device': 'gpu',               # 啟用 GPU 訓練
             'gpu_device_id': -1,
+            'num_thread': 70,
             'verbosity': 2,
             'seed': 42,
 
