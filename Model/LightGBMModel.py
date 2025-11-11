@@ -48,7 +48,7 @@ class LightGBM(Model):
             'boosting_type': 'gbdt',
             # 'device': 'gpu',               # 啟用 GPU 訓練
             # 'gpu_device_id': -1,
-            'num_thread': -1,
+            'num_thread': 70,
             'verbosity': 2,
             'seed': 42,
 
@@ -59,8 +59,8 @@ class LightGBM(Model):
             'min_data_in_leaf': 20,        # 避免過度擬合（可調小更強）
 
             # === 抽樣與特徵控制 ===
-            'feature_fraction': 0.8,       # 每次訓練使用的特徵比例
-            'bagging_fraction': 0.8,       # 每次訓練使用的樣本比例
+            'feature_fraction': 0.7,       # 每次訓練使用的特徵比例
+            'bagging_fraction': 0.7,       # 每次訓練使用的樣本比例
             'bagging_freq': 5,             # 每棵樹都重新抽樣
             'max_bin': 63,
             # 'gpu_use_dp': True,
