@@ -47,7 +47,7 @@ class LightGBM(Model):
         'metric': ['binary_logloss', 'auc'],  # 同時計算 AUC
         'boosting_type': 'gbdt',
         'device': 'gpu',               # 啟用 GPU 訓練
-        'verbosity': -1,
+        'verbosity': 1,
         'seed': 42,
 
         # === 學習率與樹深度設定 ===
@@ -55,7 +55,7 @@ class LightGBM(Model):
         'num_leaves': 256,             # 葉節點數增加，學習更細
         'max_depth': -1,               # 不限制深度，由 num_leaves 控制
         'min_data_in_leaf': 20,        # 避免過度擬合（可調小更強）
-        'dart_mode': True,    # 或使用 boosting_type='dart'
+        'early_stopping_round': 1000,
 
         # === 抽樣與特徵控制 ===
         'feature_fraction': 0.9,       # 每次訓練使用的特徵比例
@@ -76,12 +76,11 @@ class LightGBM(Model):
 
         # 訓練
         self.model = lgb.train(
-            params,
-            lgb_train,
+            params=params,
+            train_set=lgb_train,
             feval=f1_metric,   # 自訂 F1 metric
             valid_sets=[lgb_train, lgb_val],
             valid_names=['train', 'val'],
-            callbacks=[lgb.early_stopping(stopping_rounds=1000), lgb.log_evaluation(period=200)],
             num_boost_round=10000,             # 樹數上限，大 learning capacity
         )
 
