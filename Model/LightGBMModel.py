@@ -62,7 +62,7 @@ class LightGBM(Model):
             'feature_fraction': 0.8,       # 每次訓練使用的特徵比例
             'bagging_fraction': 0.8,       # 每次訓練使用的樣本比例
             'bagging_freq': 1,             # 每棵樹都重新抽樣
-            'max_bin': 255,                # 特徵分箱數，GPU 推薦使用 255
+            'max_bin': 63,
             'gpu_use_dp': True,
 
             # === 正則化設定 ===
