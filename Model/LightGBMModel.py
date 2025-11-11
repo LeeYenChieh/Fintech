@@ -82,6 +82,7 @@ class LightGBM(Model):
             feval=f1_metric,   # 自訂 F1 metric
             valid_sets=[lgb_train, lgb_val],
             valid_names=['train', 'val'],
+            callbacks=[lgb.log_evaluation(period=1)],
             num_boost_round=10000,             # 樹數上限，大 learning capacity
         )
 
