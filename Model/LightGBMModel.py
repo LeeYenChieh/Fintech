@@ -76,9 +76,8 @@ class LightGBM(Model):
             feval=f1_metric,   # 自訂 F1 metric
             valid_sets=[lgb_train, lgb_val],
             valid_names=['train', 'val'],
-            callbacks=[lgb.early_stopping(stopping_rounds=1000)],
+            callbacks=[lgb.early_stopping(stopping_rounds=1000), lgb.log_evaluation(period=200)],
             num_boost_round=10000,             # 樹數上限，大 learning capacity
-            verbose_eval=200                   # 每 200 次輸出一次結果
         )
 
         # 儲存模型
