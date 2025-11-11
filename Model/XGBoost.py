@@ -37,7 +37,6 @@ class XGBoostModel(Model):
         # XGBoost 參數設定
         params = {
             'objective': 'binary:logistic',
-            'eval_metric': 'logloss',
             'tree_method': 'gpu_hist',  # 若無 GPU 可改為 'hist'
             'learning_rate': 0.02,
             'max_depth': 10,
