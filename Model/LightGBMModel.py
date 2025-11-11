@@ -53,11 +53,10 @@ class LightGBM(Model):
             'seed': 42,
 
             # === 學習率與樹深度設定 ===
-            'learning_rate': 0.01,         # 小 learning_rate，搭配大量樹數
+            'learning_rate': 0.05,         # 小 learning_rate，搭配大量樹數
             'num_leaves': 256,             # 葉節點數增加，學習更細
             'max_depth': -1,               # 不限制深度，由 num_leaves 控制
             'min_data_in_leaf': 20,        # 避免過度擬合（可調小更強）
-            'early_stopping_round': 1000,
 
             # === 抽樣與特徵控制 ===
             'feature_fraction': 0.9,       # 每次訓練使用的特徵比例
@@ -82,8 +81,8 @@ class LightGBM(Model):
             feval=f1_metric,   # 自訂 F1 metric
             valid_sets=[lgb_train, lgb_val],
             valid_names=['train', 'val'],
-            callbacks=[lgb.log_evaluation(period=1)],
-            num_boost_round=10000,             # 樹數上限，大 learning capacity
+            callbacks=[lgb.log_evaluation(period=1), lgb.early_stopping(stopping_rounds=50)],
+            num_boost_round=1000,             # 樹數上限，大 learning capacity
         )
 
         # 儲存模型
