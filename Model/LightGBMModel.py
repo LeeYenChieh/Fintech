@@ -44,7 +44,7 @@ class LightGBM(Model):
         params = {
             # === 基本設定 ===
             'objective': 'binary',
-            'metric': ['binary_logloss', 'auc'],  # 同時計算 AUC
+            'metric': [],
             'boosting_type': 'gbdt',
             # 'device': 'gpu',               # 啟用 GPU 訓練
             # 'gpu_device_id': -1,
