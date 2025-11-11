@@ -37,7 +37,8 @@ class XGBoostModel(Model):
         # XGBoost 參數設定
         params = {
             'objective': 'binary:logistic',
-            'tree_method': 'gpu_hist',  # 若無 GPU 可改為 'hist'
+            'tree_method': 'hist',
+            'device': 'cuda',
             'learning_rate': 0.02,
             'max_depth': 10,
             'lambda': 5,
