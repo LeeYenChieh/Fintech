@@ -54,7 +54,7 @@ class XGBoostModel(Model):
             dtrain=dtrain,
             num_boost_round=20000,
             evals=evals,
-            feval=f1_eval,         # 自訂 F1 metric
+            custom_metric=f1_eval,         # 自訂 F1 metric
             maximize=True,         # F1 越大越好
             early_stopping_rounds=2000,
             verbose_eval=200
