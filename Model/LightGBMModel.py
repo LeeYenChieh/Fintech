@@ -46,8 +46,8 @@ class LightGBM(Model):
             'objective': 'binary',
             'metric': ['binary_logloss', 'auc'],  # 同時計算 AUC
             'boosting_type': 'gbdt',
-            'device': 'gpu',               # 啟用 GPU 訓練
-            'gpu_device_id': -1,
+            # 'device': 'gpu',               # 啟用 GPU 訓練
+            # 'gpu_device_id': -1,
             'num_thread': -1,
             'verbosity': 2,
             'seed': 42,
@@ -63,7 +63,7 @@ class LightGBM(Model):
             'bagging_fraction': 0.8,       # 每次訓練使用的樣本比例
             'bagging_freq': 5,             # 每棵樹都重新抽樣
             'max_bin': 63,
-            'gpu_use_dp': True,
+            # 'gpu_use_dp': True,
 
             # === 正則化設定 ===
             'lambda_l1': 1.0,              # L1 正則化
