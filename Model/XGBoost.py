@@ -5,6 +5,12 @@ from sklearn.metrics import f1_score
 import pandas as pd
 import os
 
+def f1_eval(preds, dtrain):
+    labels = dtrain.get_label()
+    # 二分類預測概率轉標籤
+    preds_binary = (preds > 0.5).astype(int)
+    return 'f1', f1_score(labels, preds_binary)
+
 class XGBoostModel(Model):
     def __init__(self, modelPath):
         super().__init__(modelPath)
@@ -49,6 +55,8 @@ class XGBoostModel(Model):
             dtrain=dtrain,
             num_boost_round=20000,
             evals=evals,
+            feval=f1_eval,         # 自訂 F1 metric
+            maximize=True,         # F1 越大越好
             early_stopping_rounds=2000,
             verbose_eval=200
         )
@@ -80,7 +88,7 @@ class XGBoostModel(Model):
         valX_without_acct = valX.drop('acct', axis=1) if 'acct' in valX.columns else valX
 
         dval = xgb.DMatrix(valX_without_acct)
-        preds_prob = self.model.predict(dval)
+        preds_prob = self.model.predict(dval, ntree_limit=self.model.best_ntree_limit)
         preds = (preds_prob > threshold).astype(int)
 
         f1 = f1_score(valy, preds)
@@ -96,7 +104,7 @@ class XGBoostModel(Model):
         testX_without_acct = testX.drop('acct', axis=1) if 'acct' in testX.columns else testX
 
         dtest = xgb.DMatrix(testX_without_acct)
-        preds_prob = self.model.predict(dtest)
+        preds_prob = self.model.predict(dtest, ntree_limit=self.model.best_ntree_limit)
         preds = (preds_prob > threshold).astype(int)
         preds = pd.Series(preds, name="label")
         preds = pd.concat([all_acct, preds], axis=1)
