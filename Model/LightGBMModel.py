@@ -79,13 +79,13 @@ class LightGBM(Model):
             feval=f1_metric,   # 自訂 F1 metric
             valid_sets=[lgb_train, lgb_val],
             valid_names=['train', 'val'],
-            callbacks=[lgb.log_evaluation(period=10), lgb.early_stopping(stopping_rounds=50)],
+            callbacks=[lgb.log_evaluation(period=10), lgb.early_stopping(stopping_rounds=50, first_metric_only=False)],
             num_boost_round=1000,             # 樹數上限，大 learning capacity
         )
 
         # 儲存模型
         self.model.save_model(self.modelPath)
-        self.validate()
+        self.validate(dataset)
 
     def load(self):
         print(f"[LightGBM] Loading model from {self.modelPath} ...")
