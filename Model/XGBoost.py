@@ -88,7 +88,7 @@ class XGBoostModel(Model):
         valX_without_acct = valX.drop('acct', axis=1) if 'acct' in valX.columns else valX
 
         dval = xgb.DMatrix(valX_without_acct)
-        preds_prob = self.model.predict(dval, ntree_limit=self.model.best_ntree_limit)
+        preds_prob = self.model.predict(dval)
         preds = (preds_prob > threshold).astype(int)
 
         f1 = f1_score(valy, preds)
@@ -104,7 +104,7 @@ class XGBoostModel(Model):
         testX_without_acct = testX.drop('acct', axis=1) if 'acct' in testX.columns else testX
 
         dtest = xgb.DMatrix(testX_without_acct)
-        preds_prob = self.model.predict(dtest, ntree_limit=self.model.best_ntree_limit)
+        preds_prob = self.model.predict(dtest)
         preds = (preds_prob > threshold).astype(int)
         preds = pd.Series(preds, name="label")
         preds = pd.concat([all_acct, preds], axis=1)
